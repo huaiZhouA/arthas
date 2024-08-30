@@ -9,6 +9,6 @@ public class DistributorOptions {
     /**
      * ResultConsumer的结果队列长度，用于控制内存缓存的命令结果数据量
      */
-    public static int resultQueueSize = 50;
+    public static int resultQueueSize = 2000;
 
 }
