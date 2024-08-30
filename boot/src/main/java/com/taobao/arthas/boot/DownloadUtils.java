@@ -28,7 +28,7 @@ public class DownloadUtils {
 
     private static final String INNER_REPO_HOST = "n-pre-sino-mock-service.meetsocial.cn";
 
-    private static final String COMPANY_REPO_HOST = "pre-sino-mock-service.meetsocial.cn";
+    private static final String COMPANY_REPO_HOST = "o-test-sino-mock-service.meetsocial.cn";
 
     private static final String ARTHAS_CORE_LOCAL_PATH = "/home/work/.arthas/lib/${VERSION}/arthas/arthas-core.jar";
 
