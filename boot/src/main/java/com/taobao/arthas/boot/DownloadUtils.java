@@ -22,11 +22,13 @@ public class DownloadUtils {
 
     private static final int CONNECTION_TIMEOUT = 3000;
 
+    public static String WORK_USER_HOME_DIR = System.getProperty("user.home");
+
     private static final String INNER_REPO_HOST = "n-pre-sino-mock-service.meetsocial.cn";
 
     private static final String COMPANY_REPO_HOST = "o-test-sino-mock-service.meetsocial.cn";
 
-    private static final String ARTHAS_CORE_LOCAL_PATH = "/home/work/.arthas/lib/${VERSION}/arthas/arthas-core.jar";
+    private static final String ARTHAS_CORE_LOCAL_PATH = WORK_USER_HOME_DIR + "/.arthas/lib/${VERSION}/arthas/arthas-core.jar";
 
     private static final List<String> REPO_LIST = Arrays.asList(INNER_REPO_HOST, COMPANY_REPO_HOST);
 
