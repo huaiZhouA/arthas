@@ -1,19 +1,15 @@
 package com.taobao.arthas.boot;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.taobao.arthas.common.AnsiLog;
+import com.taobao.arthas.common.IOUtils;
+
+import java.io.*;
 import java.net.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import com.taobao.arthas.common.AnsiLog;
-import com.taobao.arthas.common.IOUtils;
 
 /**
  * @author hengyunabc 2018-11-06
@@ -96,10 +92,12 @@ public class DownloadUtils {
     private static void downloadArthasCore(String arthasVersion) throws IOException {
         String arthasCoreLocalPath = ARTHAS_CORE_LOCAL_PATH.replace("${VERSION}", arthasVersion);
         String repoHost = selectRepoHost();
+        AnsiLog.info("get arthas core repo host: " + repoHost);
         if (repoHost == null || repoHost.isEmpty()) {
             return;
         }
         String repoUrl = "http://" + repoHost + "/api/common/download/arthas-core.jar";
+        AnsiLog.blue("get arthas core url: " + repoUrl);
         saveUrl(arthasCoreLocalPath, repoUrl, true);
     }
 
@@ -120,7 +118,7 @@ public class DownloadUtils {
         IOUtils.unzip(tempFile.getAbsolutePath(), unzipDir.getAbsolutePath());
 
         try {
-            TimeUnit.SECONDS.sleep(30);
+            TimeUnit.SECONDS.sleep(10);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
