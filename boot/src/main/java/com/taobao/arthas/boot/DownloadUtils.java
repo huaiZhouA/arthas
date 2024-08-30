@@ -86,12 +86,9 @@ public class DownloadUtils {
     private static String selectRepoHost() {
         for (String repo_host : REPO_LIST) {
             try {
-                InetAddress inetAddress = InetAddress.getByName(repo_host);
-                Socket socket = new Socket(inetAddress, CONNECTION_TIMEOUT);
+                final InetAddress inetAddress = InetAddress.getByName(repo_host);
                 return repo_host;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            } catch (Exception ignored) {}
         }
         return null;
     }
