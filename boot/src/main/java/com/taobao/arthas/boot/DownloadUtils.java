@@ -5,21 +5,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.taobao.arthas.common.AnsiLog;
 import com.taobao.arthas.common.IOUtils;
 
 /**
- *
  * @author hengyunabc 2018-11-06
- *
  */
 public class DownloadUtils {
     private static final String ARTHAS_VERSIONS_URL = "https://arthas.aliyun.com/api/versions";
@@ -28,6 +25,14 @@ public class DownloadUtils {
     private static final String ARTHAS_DOWNLOAD_URL = "https://arthas.aliyun.com/download/${VERSION}?mirror=${REPO}";
 
     private static final int CONNECTION_TIMEOUT = 3000;
+
+    private static final String INNER_REPO_HOST = "n-pre-sino-mock-service.meetsocial.cn";
+
+    private static final String COMPANY_REPO_HOST = "pre-sino-mock-service.meetsocial.cn";
+
+    private static final String ARTHAS_CORE_LOCAL_PATH = "/home/work/.arthas/lib/${VERSION}/arthas/arthas-core.jar";
+
+    private static final List<String> REPO_LIST = Arrays.asList(INNER_REPO_HOST, COMPANY_REPO_HOST);
 
     public static String readLatestReleaseVersion() {
         InputStream inputStream = null;
@@ -78,6 +83,29 @@ public class DownloadUtils {
         return repoUrl;
     }
 
+    private static String selectRepoHost() {
+        for (String repo_host : REPO_LIST) {
+            try {
+                InetAddress inetAddress = InetAddress.getByName(repo_host);
+                Socket socket = new Socket(inetAddress, CONNECTION_TIMEOUT);
+                return repo_host;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+    }
+
+    private static void downloadArthasCore(String arthasVersion) throws IOException {
+        String arthasCoreLocalPath = ARTHAS_CORE_LOCAL_PATH.replace("${VERSION}", arthasVersion);
+        String repoHost = selectRepoHost();
+        if (repoHost == null || repoHost.isEmpty()) {
+            return;
+        }
+        String repoUrl = "https://" + repoHost + "/api/common/download/arthas-core.jar";
+        saveUrl(arthasCoreLocalPath, repoUrl, true);
+    }
+
     public static void downArthasPackaging(String repoMirror, boolean http, String arthasVersion, String savePath)
             throws IOException {
         String repoUrl = getRepoUrl(ARTHAS_DOWNLOAD_URL, http);
@@ -93,6 +121,14 @@ public class DownloadUtils {
         saveUrl(tempFile.getAbsolutePath(), remoteDownloadUrl, true);
         AnsiLog.info("Download arthas success.");
         IOUtils.unzip(tempFile.getAbsolutePath(), unzipDir.getAbsolutePath());
+
+        try {
+            TimeUnit.MINUTES.sleep(1);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        downloadArthasCore(arthasVersion);
     }
 
     private static void saveUrl(final String filename, final String urlString, boolean printProgress)

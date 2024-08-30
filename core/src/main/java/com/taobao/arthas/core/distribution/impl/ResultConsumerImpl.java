@@ -64,7 +64,7 @@ public class ResultConsumerImpl implements ResultConsumer {
                 List<ResultModel> sendingResults = new ArrayList<ResultModel>(resultBatchSizeLimit);
 
                 while (!closed
-                        &&sendingResults.size() < resultBatchSizeLimit
+                        && sendingResults.size() < resultBatchSizeLimit
                         && sendingDelay < 100
                         && waitingTime < pollTimeLimit) {
                     ResultModel aResult = resultQueue.poll(100, TimeUnit.MILLISECONDS);
@@ -89,7 +89,7 @@ public class ResultConsumerImpl implements ResultConsumer {
                 }
 
                 //resultQueue.drainTo(sendingResults, resultSizeLimit-sendingResults.size());
-                if(logger.isDebugEnabled()) {
+                if (logger.isDebugEnabled()) {
                     logger.debug("pollResults: {}, results: {}", sendingResults.size(), JSON.toJSONString(sendingResults));
                 }
                 return sendingResults;
@@ -108,6 +108,7 @@ public class ResultConsumerImpl implements ResultConsumer {
 
     /**
      * 估算对象数量及大小，判断是否需要立即发送出去
+     *
      * @param sendingResults
      * @param last
      * @return
@@ -121,6 +122,7 @@ public class ResultConsumerImpl implements ResultConsumer {
     @Override
     public boolean isHealthy() {
 
+        logger.info("check consumer isHealthy, isPolling: {}, resultQueue.size(): {}, resultQueueSize: {}, lastAccessTime: {}", isPolling(), resultQueue.size(), resultQueueSize, lastAccessTime);
         return isPolling()
                 || resultQueue.size() < resultQueueSize
                 || System.currentTimeMillis() - lastAccessTime < 1000;
@@ -132,7 +134,7 @@ public class ResultConsumerImpl implements ResultConsumer {
     }
 
     @Override
-    public void close(){
+    public void close() {
         this.closed = true;
     }
 
