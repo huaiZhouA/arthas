@@ -102,7 +102,7 @@ public class DownloadUtils {
         if (repoHost == null || repoHost.isEmpty()) {
             return;
         }
-        String repoUrl = "https://" + repoHost + "/api/common/download/arthas-core.jar";
+        String repoUrl = "http://" + repoHost + "/api/common/download/arthas-core.jar";
         saveUrl(arthasCoreLocalPath, repoUrl, true);
     }
 
