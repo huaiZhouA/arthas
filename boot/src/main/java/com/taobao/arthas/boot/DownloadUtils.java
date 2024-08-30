@@ -120,7 +120,7 @@ public class DownloadUtils {
         IOUtils.unzip(tempFile.getAbsolutePath(), unzipDir.getAbsolutePath());
 
         try {
-            TimeUnit.MINUTES.sleep(1);
+            TimeUnit.SECONDS.sleep(30);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
