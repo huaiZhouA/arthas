@@ -88,6 +88,7 @@ public class AbstractTraceAdviceListener extends AdviceListenerAdapter {
             double cost = threadLocalWatch.costInMillis();
             try {
                 boolean conditionResult = isConditionMet(command.getConditionExpress(), advice, cost);
+                logger.info("current trace total cost: {}, method name: {}, condition: {}", cost, advice.getMethod().getName(), command.getConditionExpress());
                 if (this.isVerbose()) {
                     process.write("Condition express: " + command.getConditionExpress() + " , result: " + conditionResult + "\n");
                 }
@@ -106,7 +107,7 @@ public class AbstractTraceAdviceListener extends AdviceListenerAdapter {
             } catch (Throwable e) {
                 logger.warn("trace failed.", e);
                 process.end(1, "trace failed, condition is: " + command.getConditionExpress() + ", " + e.getMessage()
-                              + ", visit " + LogUtil.loggingFile() + " for more details.");
+                        + ", visit " + LogUtil.loggingFile() + " for more details.");
             } finally {
                 threadBoundEntity.remove();
             }
